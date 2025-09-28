@@ -54,7 +54,7 @@ class R3_T01_03_Faktorizacija_TLE_Proizvodi_potpuni_kvadrati
         // Resavanje zadatka
         int n = int.Parse(Console.ReadLine());          // 1 <=  n   <= 10^4
         string[] s = Console.ReadLine().Split();        // 1 <= a[i] <= 10^9
-        SortedSet<int> a = new SortedSet<int>();        // Skup delioca
+        HashSet<int> a = new HashSet<int>();            // Skup delioca
 
         // Resavanje zadatka (Glavna petlja)
         for (int i = 0; i < n; i++)
@@ -85,7 +85,7 @@ class R3_T01_03_Faktorizacija_TLE_Proizvodi_potpuni_kvadrati
                     {                                   // jer su ostala najvise jos 2 cinioca (i to oba veca od 1001, ako su dva cinioca, jedan mora biti manji od 31607)
                         d = Koren_od_B;         
                         if (d % 2 > 0) d--; // prvi manji neparni
-                        while (d >= N_Mx_Prost_Cinilac && B % d > 0) d--;
+                        while (d >= N_Mx_Prost_Cinilac && B % d > 0) d = d - 2;
                         if (d >= N_Mx_Prost_Cinilac && B % d == 0)
                         {
                             B = B / d;
