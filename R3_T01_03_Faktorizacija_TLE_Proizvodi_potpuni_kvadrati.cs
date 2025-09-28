@@ -19,13 +19,14 @@ class R3_T01_03_Faktorizacija_TLE_Proizvodi_potpuni_kvadrati
         const int N = 1001;     // 31623 = Math.Sqrt(10^9);       // Mx Prost = 31607 // Mx Potpun kvadrat je 31607 * 31607 = 999 002 449 = 999002449
                                 // Ustvari treci koren iz (10^9) sto je 10^3 = 1000, jer ako je prvi njamanji delilac 1007, onda je potpun kvadrat 10^6, 
                                 // a svaki veci broj od 10^6 bi imao najvise treci neparni delilac veci od 1007.
-        List<int> Prosti_brojevi_Lista = new List<int>();       //Lista prostih brojeva do 31623 = Math.Sqrt(10^9)
-        bool[] Eratostenovo_sito = new bool[N + 1];
+        List<int> Prosti_brojevi_Lista = new List<int>();           // Lista prostih brojeva do 1001, jer ako je 1001 najmanji delilac, onda 1001*1001*1001 > 10^9 
+        bool[] Eratostenovo_sito = new bool[N + 1];                 // Niz prostih brojeva (false = prost, true = slozen, nije prost), inicijalno su svi prosti = false
 
-        Prosti_brojevi_Lista.Add(2); for (int i = 2; i <= N; i = i + 2) Eratostenovo_sito[i] = true;
-        Prosti_brojevi_Lista.Add(3); for (int i = 9; i <= N; i = i + 6) Eratostenovo_sito[i] = true;
+        Prosti_brojevi_Lista.Add(2); for (int i =  2; i <= N; i = i +  2) Eratostenovo_sito[i] = true;
+        Prosti_brojevi_Lista.Add(3); for (int i =  9; i <= N; i = i +  6) Eratostenovo_sito[i] = true;
+        Prosti_brojevi_Lista.Add(5); for (int i = 25; i <= N; i = i + 10) Eratostenovo_sito[i] = true;
 
-        for (int p = 5; p <= N; p = p + 2)
+        for (int p = 7; p <= N; p = p + 2)
         {
             if (!Eratostenovo_sito[p])
             {
@@ -37,50 +38,42 @@ class R3_T01_03_Faktorizacija_TLE_Proizvodi_potpuni_kvadrati
                 }
             }
         }
-        return Prosti_brojevi_Lista;
+        return Prosti_brojevi_Lista; // Prosti_brojevi_Lista i Eratostenovo_sito[1000] su sada isti s tim sto Niz ima 1000 a Lista manje od 1000 elemenata, odnosno samo 168
     }
     static void Main()
     {
-        List<int> Prosti_brojevi_Lista = new List<int>();      //Lista prostih brojeva do Math.Sqrt(10^9)
-        Prosti_brojevi_Lista = Prosti_brojevi_Lista_Napuni();
+        List<int> Prosti_brojevi_Lista = new List<int>();       // Lista prostih brojeva u kojoj je 168 brojeva, najveci je 997 = Prosti_brojevi_Lista[167]
+        Prosti_brojevi_Lista = Prosti_brojevi_Lista_Napuni();   // Ove dve linije koda su mogle da budu u jednoj, ali se tada program sporije izvrsava
 
         // for (int i = 0; i < Prosti_brojevi_Lista.Count; i++) Console.WriteLine(Prosti_brojevi_Lista[i]);
 
-        // Resavanje zadatka (glavna petlja)
+        // Resavanje zadatka
         int n = int.Parse(Console.ReadLine());          // 1 <=  n   <= 10^4
         string[] s = Console.ReadLine().Split();        // 1 <= a[i] <= 10^9
+        SortedSet<int> a = new SortedSet<int>();        // Skup delioca
 
-        SortedSet<int> a = new SortedSet<int>();
-
+        // Resavanje zadatka (Glavna petlja)
         for (int i = 0; i < n; i++)
         {
-            int B = int.Parse(s[i]);                    // B = a[i]
+            int B = int.Parse(s[i]);                    // B = a[i] Sledeci ucitan prirodan broj Ai koji bi trebalo da mnozimo sa proizvodom prethodnih i-1 brojeva
+            int id = 0;                                 // Indeks prvog prostog broja u listi prostih brojeva
+            int id_max = Prosti_brojevi_Lista.Count;    // Najveci indeks u listi prostih brojeva, odnosno najveci prost broj u listi: Prosti_brojevi_Lista[167] = 997
+            int d = Prosti_brojevi_Lista[id];           // Trenutni delilac d (polazi se od najmanjeg, tj prvog): d = Prosti_brojevi_Lista[0] = 2 
 
-            int id = 0;
-            int id_max = Prosti_brojevi_Lista.Count;
-            int d = Prosti_brojevi_Lista[id];
-
-            while (d * d <= B && id < id_max)
+            while (id < id_max && d * d <= B)
             {
-                if (d * d > B) break;
+                // if (d * d > B) break;
                 int p = 0;                              // Broj ponavljanja cinioca d
-                while (B % d == 0)
-                {
-                    B = B / d;
-                    p++;
-                }
-                if (p % 2 > 0) { if (a.Contains(d)) a.Remove(d); else a.Add(d); }
-                id++;
+                while (B % d == 0) { B = B / d;  p++; } // Sve dok je broj B deljiv sa d => delimo ga sa d i inkrementiramo brojac delilaca p
+                if (p % 2 > 0) { if (a.Contains(d)) a.Remove(d); else a.Add(d); }   // Samo ako je broj delilaca p neparan onda ako nije u skupu dodajemo ga, a ako jesto izbacujemo
+                id++;                                   // Pripremamo se za sledecu iteraciju, odnosno sledeci prvi veci delilac, koji je prost broj
                 if (id < id_max) d = Prosti_brojevi_Lista[id];
             }
-            if (B > 1)
+            if (B > 1)                                  // Ako je jos uvek broj B veci od 1 (a prvi najmanji d > 1000), onda proveravamo da li je B potpun kvadrat
             {
                 int Koren_od_B = (int)Math.Floor(Math.Sqrt(B));         // Mx Prost = 31607 // Mx Potpun kvadrat je 31607 * 31607 = 999 002 449 = 999002449
                 int Kvadrat_od_Korena_od_B = Koren_od_B * Koren_od_B;   // Mx Potpun kvadrat je 31607 * 31607 = 999 002 449 = 999002449
-                if (Kvadrat_od_Korena_od_B != B)
-                {
-                    if (a.Contains(B)) a.Remove(B); else a.Add(B);
-                }
+                if (Kvadrat_od_Korena_od_B != B) { if (a.Contains(B)) a.Remove(B); else a.Add(B); }
             }
             Console.WriteLine(a.Count > 0 ? "ne" : "da");
         }
