@@ -7,7 +7,7 @@
 // https://github.com/draganilicnis/R1_T05_05_Deljivost_Prost_TLE_Rastavljanje_na_proste_cinioce/blob/main/R1_T05_05_Deljivost_Prost_TLE_Rastavljanje_na_proste_cinioce.cs
 // https://onlinegdb.com/Xn72wK0Vb
 // https://arena.petlja.org/sr-Latn-RS/competition/r3-t01-05-faktorizacija#tab_133483
-
+// https://github.com/draganilicnis/R3_T01_03_Faktorizacija_TLE_Proizvodi_potpuni_kvadrati
 
 using System;
 using System.Collections.Generic;
